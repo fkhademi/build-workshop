@@ -20,7 +20,7 @@ resource "aviatrix_account" "azure" {
 #Azure
 module "transit_azure" {
   source  = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version = "2.0.0"
+  version = "3.0.0"
 
   name          = "azure-transit"
   cidr          = "10.${var.pod_id}.0.0/20"
@@ -34,7 +34,7 @@ module "transit_azure" {
 
 module "client_vnet" {
   source  = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version = "2.0.0"
+  version = "3.0.0"
 
   name          = "azure-client-node"
   cidr          = "10.${var.pod_id}.16.0/20"
@@ -50,7 +50,7 @@ module "client_vnet" {
 
 module "app_vnet" {
   source  = "terraform-aviatrix-modules/azure-spoke/aviatrix"
-  version = "2.0.0"
+  version = "3.0.0"
 
   name          = "azure-app-node"
   cidr          = "10.${var.pod_id}.32.0/20"
@@ -77,7 +77,7 @@ resource "aviatrix_vpc" "transit_aws" {
 
 module "spoke_aws_1" {
   source  = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version = "2.0.0"
+  version = "3.0.0"
 
   name          = "aws-db-node"
   cidr          = "10.${var.pod_id}.64.0/20"
@@ -89,14 +89,4 @@ module "spoke_aws_1" {
   prefix        = false
   suffix        = false
   attached      = false
-}
-
-resource "aviatrix_fqdn" "egress" {
-  fqdn_tag     = "allow-all"
-  fqdn_enabled = true
-  fqdn_mode    = "black"
-
-  gw_filter_tag_list {
-    gw_name = module.spoke_aws_1.spoke_gateway.gw_name
-  }
 }
