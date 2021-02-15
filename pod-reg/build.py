@@ -148,6 +148,7 @@ def process():
         ''' %(code)
 
 
+
 @route('/')
 def server_static(filepath="index.html"):
     return static_file(filepath, root='./public/')
