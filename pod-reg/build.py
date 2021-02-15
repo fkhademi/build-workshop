@@ -24,6 +24,7 @@ def get_next_pod_id(id, name, email, company, start_time, code, dynamodb=None):
     try:
     # try to parse the object    
         pod_num = response['Item']['pod_num']
+        max_pods = response['Item']['max_pods']
     except:
         # Build date not found or pod num cannot be parsed
         print("Error parsing the pod number")
@@ -32,14 +33,13 @@ def get_next_pod_id(id, name, email, company, start_time, code, dynamodb=None):
         # Increment Pod Counter
         pod_num=pod_num+1
         padded_pod_num = str(pod_num).zfill(3)
-        add_pod(id, pod_num, code)
+        add_pod(id, pod_num, max_pods, code)
         # Set User ID
         user_id = "%s-%s" %(id, padded_pod_num)
         # Add User to Pod History
         add_user(id, user_id, name, email, company, start_time)
         print("Added user %s to the pod history") %user_id
         return(pod_num)
- 
 
 def get_code(id, dynamodb=None):
     # Get the access code for Build ID
@@ -62,7 +62,28 @@ def get_code(id, dynamodb=None):
         print("Found Code %s") %code
         return(code)
 
-def add_pod(id, pod_num, code, dynamodb=None):
+def get_max_pods(id, dynamodb=None):
+    # Get the access code for Build ID
+    if not dynamodb:
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+    # Query table for Build ID
+    table = dynamodb.Table('pod_counter')
+    response = table.get_item(
+       Key={
+            'id': id
+        }
+    )
+    try:
+    # try to parse the object    
+        max_pods = response['Item']['max_pods']
+    except:
+        # If code not found, print an error
+        return '''Error trying to find Build session ID'''
+    else:
+        print("Found max_pods %s") %max_pods
+        return(max_pods)
+
+def add_pod(id, pod_num, max_pods, code, dynamodb=None):
     # Insert a new record in DynamoDB
     if not dynamodb:
         dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
@@ -72,6 +93,7 @@ def add_pod(id, pod_num, code, dynamodb=None):
        Item={
             'id': id,
             'pod_num': pod_num,
+            'max_pods': max_pods,
             'code': code
         }
     )
@@ -113,7 +135,10 @@ def server_static(filepath="new.html"):
 
 @post('/newclass')
 def process():
+    offset = request.forms.get('offset')
+    offset = int(offset) - 1
     max_pods = request.forms.get('max_pods')
+    max_pods = int(offset) + int(max_pods)
     now = datetime.now()
     id = "%s-%s-%s" % (now.year, '{:02d}'.format(now.month), '{:02d}'.format(now.day))
     # POD Start time # %m/%d/%Y, %H:%M:%S
@@ -122,7 +147,7 @@ def process():
     code = id_generator()
     # Insert a new record in DynamoDB
     try:
-        add_pod(id, 0, code)
+        add_pod(id, offset, max_pods, code)
     except:
         return '''<html>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -160,7 +185,7 @@ def server_static(filepath):
 @post('/doform')
 def process():
     # Get the form vars
-    max_num_pods = 46
+    #max_num_pods = 46
     domain = "avxlab.cc"
     name = request.forms.get('name')
     email = request.forms.get('email')
@@ -172,6 +197,7 @@ def process():
     id = "%s-%s-%s" % (now.year, '{:02d}'.format(now.month), '{:02d}'.format(now.day))
 
     build_code = get_code(id)
+    max_num_pods = get_max_pods(id)
 
     if code == build_code:
         now = now.strftime("%Y-%m-%dT%H:%M:%S")
@@ -226,7 +252,7 @@ def process():
                 <div class="card-body">
                     <h5 class="card-title">Lab Guide</h5>
                     <p class="card-text">Download the lab guide here</p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://avx-build.s3.eu-central-1.amazonaws.com/Aviatrix-Build-Lab-Guide-1.0.pdf" class="btn btn-primary">Open Lab Guide</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://avx-build.s3.eu-central-1.amazonaws.com/Aviatrix-Build-Lab-Guide-1.2.pdf" class="btn btn-primary">Open Lab Guide</a>
                 </div>
                 </div>
             </div>
