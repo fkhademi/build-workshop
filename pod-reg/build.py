@@ -5,7 +5,7 @@ import json
 import boto3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
-from bottle import route, run, post, request, static_file, error, auth_basic
+from bottle import route, run, post, request, static_file, error, auth_basic, template
 import string
 import random
 
@@ -173,14 +173,15 @@ def process():
         ''' %(code)
 
 
-
 @route('/')
 def server_static(filepath="index.html"):
     return static_file(filepath, root='./public/')
 
+
 @route('/static/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='./public/')
+
 
 @post('/doform')
 def process():
@@ -282,6 +283,22 @@ def process():
         </div>
         </div>
         <div class="alert alert-danger" role="alert">Wrong Access Code! Please try again</div>'''
+
+@route('/list')
+@auth_basic(check)
+def getusers():
+    #try:
+        dynamodb = boto3.resource('dynamodb', 'eu-central-1', verify=False)
+        table = dynamodb.Table('pod_history')
+        response = table.scan()
+        #print(response)
+        return template('list', users=response['Items'])
+
+    #if (response):
+    #    return template('list', users=response['Items'])
+    #else: 
+    #    return HTTPResponse(status=204)
+
 
 @error(404)
 def error404(error):
