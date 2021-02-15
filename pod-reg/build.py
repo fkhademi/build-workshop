@@ -5,7 +5,7 @@ import json
 import boto3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
-from bottle import route, run, post, request, static_file, error
+from bottle import route, run, post, request, static_file, error, auth_basic
 import string
 import random
 
@@ -97,8 +97,17 @@ def add_user(id, user_id, name, email, company, start_time, dynamodb=None):
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+# Log in details
+def check(user, pw):
+    # Check user/pw here and return True/False
+    if user=="build" and pw=="Password123":
+        return True
+    else:
+        return False
+
 # Route for creating a new Build Session
 @route('/new')
+@auth_basic(check)
 def server_static(filepath="new.html"):
     return static_file(filepath, root='./public/')
 
@@ -137,8 +146,6 @@ def process():
         </div>
         <div class="alert alert-primary" role="alert">New Access Code: %s</b></div>
         ''' %(code)
-
-
 
 
 @route('/')
@@ -252,6 +259,10 @@ def process():
 @error(404)
 def error404(error):
     return '404 - the requested page could not be found'
+
+@error(401)
+def error401(error):
+    return '401 - access is forbidden'
 
 run(host='0.0.0.0', reloader=True, port=8080, debug=True)
 
