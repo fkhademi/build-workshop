@@ -19,17 +19,19 @@ resource "aviatrix_account" "azure" {
 
 #Azure
 module "transit_azure" {
-  source  = "terraform-aviatrix-modules/azure-transit/aviatrix"
-  version = "3.0.0"
+  #source  = "terraform-aviatrix-modules/azure-transit/aviatrix"
+  #version = "3.0.0"
 
-  name          = "azure-transit"
-  cidr          = "10.${var.pod_id}.0.0/20"
-  region        = var.azure_region
-  account       = aviatrix_account.azure.account_name
-  instance_size = "Standard_B2s"
-  ha_gw         = false
-  prefix        = false
-  suffix        = false
+  source          = "git::https://github.com/terraform-aviatrix-modules/terraform-aviatrix-azure-transit.git?ref=v3.0.1"
+  name            = "azure-transit"
+  cidr            = "10.${var.pod_id}.0.0/20"
+  region          = var.azure_region
+  account         = aviatrix_account.azure.account_name
+  instance_size   = "Standard_B2s"
+  local_as_number = "64512"
+  ha_gw           = false
+  prefix          = false
+  suffix          = false
 }
 
 module "client_vnet" {
