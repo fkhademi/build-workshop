@@ -1,4 +1,4 @@
-#Controller accounts
+# Controller accounts
 resource "aviatrix_account" "aws" {
   account_name       = var.aws_account_name
   cloud_type         = 1
@@ -17,21 +17,22 @@ resource "aviatrix_account" "azure" {
   arm_application_key = var.azure_application_key
 }
 
-#Azure
+# AZURE TRANSIT
 module "transit_azure" {
   source  = "terraform-aviatrix-modules/azure-transit/aviatrix"
   version = "3.0.0"
 
-  name            = "azure-transit"
-  cidr            = "10.${var.pod_id}.0.0/20"
-  region          = var.azure_region
-  account         = aviatrix_account.azure.account_name
-  instance_size   = "Standard_B2s"
-  ha_gw           = false
-  prefix          = false
-  suffix          = false
+  name          = "azure-transit"
+  cidr          = "10.${var.pod_id}.0.0/20"
+  region        = var.azure_region
+  account       = aviatrix_account.azure.account_name
+  instance_size = "Standard_B2s"
+  ha_gw         = false
+  prefix        = false
+  suffix        = false
 }
 
+# CLIENT / WEB VNET
 module "client_vnet" {
   source  = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version = "3.0.0"
@@ -48,6 +49,7 @@ module "client_vnet" {
   attached      = false
 }
 
+# APP VNET
 module "app_vnet" {
   source  = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version = "3.0.0"
@@ -64,29 +66,45 @@ module "app_vnet" {
   attached      = false
 }
 
-#AWS
-/* resource "aviatrix_vpc" "transit_aws" {
-  cloud_type           = 1
-  account_name         = aviatrix_account.aws.account_name
-  region               = var.aws_region
-  name                 = "aws-transit"
-  cidr                 = "10.${var.pod_id}.48.0/20"
-  aviatrix_transit_vpc = true
-  aviatrix_firenet_vpc = false
-}
- */
+#AWS SPOKE
 module "spoke_aws_1" {
   source  = "terraform-aviatrix-modules/aws-spoke/aviatrix"
   version = "3.0.0"
 
-  name          = "aws-db-node"
-  cidr          = "10.${var.pod_id}.64.0/20"
-  region        = var.aws_region
-  account       = aviatrix_account.aws.account_name
-  instance_size = "t2.small"
-  transit_gw    = ""
-  ha_gw         = false
-  prefix        = false
-  suffix        = false
-  attached      = false
+  name           = "aws-db-node"
+  cidr           = "10.${var.pod_id}.64.0/20"
+  region         = var.aws_region
+  account        = aviatrix_account.aws.account_name
+  instance_size  = "t2.small"
+  transit_gw     = ""
+  ha_gw          = false
+  prefix         = false
+  suffix         = false
+  attached       = false
+  single_ip_snat = true
+}
+
+# EGRESS POLICY
+resource "aviatrix_fqdn" "fqdn" {
+  fqdn_tag     = "Default-Egress-Policy"
+  fqdn_enabled = true
+  fqdn_mode    = "white"
+
+  gw_filter_tag_list {
+    gw_name        = module.spoke_aws_1.spoke_gateway.gw_name
+  }
+
+  domain_names {
+    fqdn  = "*.ubuntu.com"
+    proto = "tcp"
+    port  = "80"
+    action = "Allow"
+  }
+
+  domain_names {
+    fqdn  = "github.com"
+    proto = "tcp"
+    port  = "443"
+    action = "Allow"
+  }
 }
