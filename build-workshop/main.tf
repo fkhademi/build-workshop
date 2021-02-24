@@ -85,7 +85,7 @@ module "spoke_aws_1" {
 }
 
 # EGRESS POLICY
-resource "aviatrix_fqdn" "fqdn" {
+resource "aviatrix_fqdn" "egress" {
   fqdn_tag     = "Default-Egress-Policy"
   fqdn_enabled = true
   fqdn_mode    = "white"

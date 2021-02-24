@@ -153,8 +153,8 @@ data "template_file" "db" {
   template = file("${path.module}/cloud-init/user-data-db.tpl")
 
   vars = {
-    pod_id     = "pod${var.pod_id}"
-    password   = "${var.password}"
+    pod_id   = "pod${var.pod_id}"
+    password = "${var.password}"
   }
 }
 resource "aws_security_group" "db" {
@@ -200,6 +200,9 @@ resource "aws_instance" "db" {
   tags = {
     Name = "db-pod${var.pod_id}-srv"
   }
+  depends_on = [
+    aviatrix_fqdn.egress, module.spoke_aws_1
+  ]
 }
 resource "aws_route53_record" "db" {
   zone_id = data.aws_route53_zone.main.zone_id
