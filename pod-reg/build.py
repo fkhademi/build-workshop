@@ -223,7 +223,8 @@ def process():
                 <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Remote Access Server</h5>
-                    <p class="card-text">u: pod%s</p>
+                    <p class="card-text">u: admin</p>
+                    <p class="card-text">p: Password123!</p>
                     <a target="_blank" rel="noopener noreferrer" href="https://client.pod%s.%s" class="btn btn-primary">Open Server</a>
                 </div>
                 </div>
@@ -233,6 +234,7 @@ def process():
                 <div class="card-body">
                     <h5 class="card-title">Aviatrix Controller</h5>
                     <p class="card-text">u: admin</p>
+                    <p class="card-text">p: Password123!</p>
                     <a target="_blank" rel="noopener noreferrer" href="https://ctrl.pod%s.%s" class="btn btn-primary">Open Controller</a>
                 </div>
                 </div>
@@ -242,6 +244,7 @@ def process():
                 <div class="card-body">
                     <h5 class="card-title">Aviatrix Co-Pilot</h5>
                     <p class="card-text">u: admin</p>
+                    <p class="card-text">p: Password123!</p>
                     <a target="_blank" rel="noopener noreferrer" href="https://cplt.pod%s.%s" class="btn btn-primary">Open Co-Pilot</a>
                 </div>
                 </div>
@@ -257,7 +260,7 @@ def process():
                 </div>
                 </div>
             </div>
-            </div>''' %(pod_id, pod_id, pod_id, domain, pod_id, domain, pod_id, domain)
+            </div>''' %(pod_id, pod_id, domain, pod_id, domain, pod_id, domain)
             
         else:
             # print a page to say that there are no more pods left
