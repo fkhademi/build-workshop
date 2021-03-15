@@ -256,7 +256,7 @@ def process():
                 <div class="card-body">
                     <h5 class="card-title">Lab Guide</h5>
                     <p class="card-text">Download the lab guide here</p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://avx-build.s3.eu-central-1.amazonaws.com/Aviatrix-Build-Lab-Guide-1.2.pdf" class="btn btn-primary">Open Lab Guide</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://avx-build.s3.eu-central-1.amazonaws.com/Aviatrix-Build-Lab-Guide.pdf" class="btn btn-primary">Open Lab Guide</a>
                 </div>
                 </div>
             </div>
