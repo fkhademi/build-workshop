@@ -8,6 +8,7 @@ from datetime import datetime
 from bottle import route, run, post, request, static_file, error, auth_basic, template
 import string
 import random
+from boto3.dynamodb.conditions import Key, Attr
 
 def get_next_pod_id(id, name, email, company, start_time, code, dynamodb=None):
     # Get the next Pod ID of a Build class.  Max pods are 50
@@ -127,12 +128,35 @@ def check(user, pw):
     else:
         return False
 
+
+# Check if the user is already registered and has a POD
+def check_for_existing_user(id, email_input):
+    dynamodb = boto3.resource('dynamodb', 'eu-central-1', verify=False)
+    table = dynamodb.Table('pod_history')
+    #response = table.scan()
+    response = table.scan(FilterExpression=Attr('user_id').begins_with(id) & Attr('email').eq(email_input))
+    if response['Count'] == 0:
+        print("[DEBUG] Existing user {} and ID {} not found".format(email_input, id))
+        return(0)
+    else:
+        users=response['Items']
+        print("[DEBUG] Searching for email {} and ID {}".format(email_input, id))
+        for user in users:
+            user_id = user['user_id']
+            pod_id = user_id.split('-')
+            print("[DEBUG] Found existing Pod ID {} with Email {}".format(pod_id, email_input))
+            pod_id = str(int(pod_id[3]))
+            return(pod_id)            
+
+
 # Route for creating a new Build Session
 @route('/new')
 @auth_basic(check)
 def server_static(filepath="new.html"):
     return static_file(filepath, root='./public/')
 
+
+## Route to create the new build class + Access Code
 @post('/newclass')
 def process():
     offset = request.forms.get('offset')
@@ -183,6 +207,7 @@ def server_static(filepath):
     return static_file(filepath, root='./public/')
 
 
+## Route to try to register user for a POD
 @post('/doform')
 def process():
     # Get the form vars
@@ -202,8 +227,16 @@ def process():
 
     if code == build_code:
         now = now.strftime("%Y-%m-%dT%H:%M:%S")
-        # Get the next POD ID
-        pod_id = get_next_pod_id(id, name, email, company, now, code)
+
+        # Check if user already registered
+        pod_id = check_for_existing_user(id, email)
+        pod_id = int(pod_id)
+        # pod_id = 0 if the user is new 
+        print("[DEBUG] Pod id = {}".format(pod_id))
+
+        if pod_id == 0:
+            # Get the next POD ID, if the user is not already registered
+            pod_id = get_next_pod_id(id, name, email, company, now, code)
         
         if pod_id <= max_num_pods:
             # print a page to display pod info
@@ -287,6 +320,8 @@ def process():
         </div>
         <div class="alert alert-danger" role="alert">Wrong Access Code! Please try again</div>'''
 
+
+## Route to list all people that have registered for a POD
 @route('/list')
 @auth_basic(check)
 def getusers():
@@ -301,6 +336,7 @@ def getusers():
     #    return template('list', users=response['Items'])
     #else: 
     #    return HTTPResponse(status=204)
+
 
 
 @error(404)
