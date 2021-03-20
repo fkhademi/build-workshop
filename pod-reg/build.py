@@ -240,6 +240,7 @@ def process():
         
         if pod_id <= max_num_pods:
             # print a page to display pod info
+            first_name = name.split(' ')
             return '''<html>
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
@@ -249,7 +250,7 @@ def process():
             <img src="/static/logo.png" class="img-fluid">
             </div>
             </div>
-            <div class="alert alert-primary" role="alert">You've been assigned <b>Pod %s</b></div>
+            <div class="alert alert-primary" role="alert">Welcome <span style="text-transform:uppercase"><b>%s</b></span>!  You've been assigned <b>Pod %s</b></div>
             <br>
             <div class="row">
             <div class="col-sm-4">
@@ -293,7 +294,7 @@ def process():
                 </div>
                 </div>
             </div>
-            </div>''' %(pod_id, pod_id, domain, pod_id, domain, pod_id, domain)
+            </div>''' %(first_name[0], pod_id, pod_id, domain, pod_id, domain, pod_id, domain)
             
         else:
             # print a page to say that there are no more pods left
