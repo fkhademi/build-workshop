@@ -12,13 +12,13 @@ This will launch the Pod Registration portal for Aviatrix Build.  The following 
 
 Create a new Build session and access code:
 
-* Go to:  https://portal.avxlab.de/new
+* Go to:  https://build.avxlab.de/new
 * Enter in the max number of pods, and starting pods (ie. max pods = 45, starting pod = 1)
 * Click New and note the Access Code
 
 View current registrations:
 
-* Go to:  https://portal.avxlab.de/list
+* Go to:  https://build.avxlab.de/list
 
 ### Variables
 The following variables are required:
