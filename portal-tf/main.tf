@@ -7,24 +7,29 @@ resource "aws_vpc" "default" {
   enable_dns_hostnames = true
   tags                 = { Name = "avx-build-vpc" }
 }
+
 resource "aws_internet_gateway" "default" {
   vpc_id = aws_vpc.default.id
   tags   = { Name = "avx-build-igw" }
 }
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.default.id
   tags   = { Name = "avx-build-rt" }
 }
+
 resource "aws_route" "public" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.default.id
 }
+
 resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.default.id
   cidr_block = "10.0.0.0/26"
   tags       = { Name = "avx-build-subnet" }
 }
+
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
@@ -87,10 +92,12 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
 resource "aws_key_pair" "key" {
   key_name   = "build-portal-sshkey"
   public_key = var.ssh_key
 }
+
 resource "aws_instance" "instance" {
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t3.small"
@@ -102,13 +109,16 @@ resource "aws_instance" "instance" {
     Name = "build-portal-srv"
   }
 }
+
 resource "aws_eip" "eip" {
   vpc = true
 }
+
 resource "aws_eip_association" "eip" {
   instance_id   = aws_instance.instance.id
   allocation_id = aws_eip.eip.id
 }
+
 resource "aws_route53_record" "dns" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = "build.${data.aws_route53_zone.main.name}"
@@ -116,6 +126,7 @@ resource "aws_route53_record" "dns" {
   ttl     = "1"
   records = [aws_eip.eip.public_ip]
 }
+
 resource "aws_route53_record" "dns2" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = "portal.${data.aws_route53_zone.main.name}"
