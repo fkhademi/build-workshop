@@ -32,12 +32,21 @@ module "transit_azure" {
   suffix        = false
 }
 
-# CLIENT / WEB VNET
-module "client_vnet" {
+# FQDN for AVX Transit GW in Azure
+resource "aws_route53_record" "gw" {
+  zone_id = data.aws_route53_zone.parent_zone.zone_id
+  name    = "pod${var.pod_id}-tgw.${data.aws_route53_zone.parent_zone.name}"
+  type    = "A"
+  ttl     = "1"
+  records = [module.transit_azure.transit_gateway.eip]
+}
+
+#  WEB VNET
+module "web_vnet" {
   source  = "terraform-aviatrix-modules/azure-spoke/aviatrix"
   version = "3.0.0"
 
-  name          = "azure-client-node"
+  name          = "azure-web-node"
   cidr          = "10.${var.pod_id}.16.0/20"
   region        = var.azure_region
   account       = aviatrix_account.azure.account_name
