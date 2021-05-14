@@ -42,7 +42,7 @@ data "template_cloudinit_config" "webapp" {
 
   part {
     content_type = "text/cloud-config"
-    content      = "${data.template_file.webapp.rendered}"
+    content      = data.template_file.webapp.rendered
   }
 }
 
@@ -66,7 +66,7 @@ data "template_cloudinit_config" "app" {
 
   part {
     content_type = "text/cloud-config"
-    content      = "${data.template_file.app.rendered}"
+    content      = data.template_file.app.rendered
   }
 }
 
