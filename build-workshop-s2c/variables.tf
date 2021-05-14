@@ -2,12 +2,13 @@
 variable "aviatrix_admin_account" { 
   default = "admin" 
 }
+
 variable "aviatrix_admin_password" {
-  type = "string"
+  type = string
 }
 
 variable "aviatrix_controller_ip" {
-  type = "string"
+  type = string
 }
 
 #Regions
