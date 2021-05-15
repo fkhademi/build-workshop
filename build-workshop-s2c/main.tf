@@ -84,7 +84,7 @@ module "spoke_aws_1" {
   cidr           = "10.${var.pod_id}.64.0/20"
   region         = var.aws_region
   account        = aviatrix_account.aws.account_name
-  instance_size  = "t2.small"
+  instance_size  = "t3.micro"
   transit_gw     = ""
   ha_gw          = false
   prefix         = false
@@ -103,7 +103,7 @@ resource "aviatrix_fqdn" "egress" {
     gw_name        = module.spoke_aws_1.spoke_gateway.gw_name
   }
 
-  domain_names {
+/*   domain_names {
     fqdn  = "*.ubuntu.com"
     proto = "tcp"
     port  = "80"
@@ -116,4 +116,21 @@ resource "aviatrix_fqdn" "egress" {
     port  = "443"
     action = "Allow"
   }
+ */
+}
+
+resource "aviatrix_fqdn_tag_rule" "ubuntu" {
+  fqdn_tag_name = aviatrix_fqdn.egress.fqdn_tag
+  fqdn          = "*.ubuntu.com"
+  protocol      = "tcp"
+  port          = "80"
+  action        = "Allow"
+}
+
+resource "aviatrix_fqdn_tag_rule" "github" {
+  fqdn_tag_name = aviatrix_fqdn.egress.fqdn_tag
+  fqdn          = "github.com"
+  protocol      = "tcp"
+  port          = "443"
+  action        = "Allow"
 }

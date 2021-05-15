@@ -89,6 +89,6 @@ data "template_file" "db" {
 
   vars = {
     pod_id   = "pod${var.pod_id}"
-    password = "${var.password}"
+    password = var.password
   }
 }
