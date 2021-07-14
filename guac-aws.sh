@@ -115,6 +115,7 @@ echo "server {
         proxy_buffering off;
         proxy_http_version 1.1;
         proxy_cookie_path /guacamole/ /;
+    }
 }" | sudo tee -a /etc/nginx/conf.d/default.conf
 
 sudo systemctl start nginx 
