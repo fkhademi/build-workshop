@@ -2,35 +2,51 @@
 
 # Inputs: ${username} ${password} ${hostname} ${pod_id} ${domainname}
 
+LOG=/home/ubuntu/log
 
 # Remove apache2
+echo "$(date) [INFO] Starting cloud init .." >> $LOG
 sudo apt autoremove -y
 sudo apt-get remove apache2 -y
 
+echo "$(date) [INFO] Running apt-get" >> $LOG
 # Install all the needed packages
 sudo apt-get update
 sudo apt-get install xrdp lxde make gcc g++ libcairo2-dev libjpeg-turbo8-dev libpng-dev libtool-bin libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libvncserver-dev libtelnet-dev libssl-dev libvorbis-dev libwebp-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user nginx -y
+echo "$(date) [INFO] apt-get finished" >> $LOG
 
 # Start and enable Tomcat
+echo "$(date) [INFO] restarting tomcat" >> $LOG
 sudo systemctl start tomcat9
 sudo systemctl enable tomcat9
+echo "$(date) [INFO] tomcat restarted" >> $LOG
 
 # Download and install Guacamole Server
+echo "$(date) [INFO] downloading and extracting guacamole" >> $LOG
 wget https://downloads.apache.org/guacamole/1.1.0/source/guacamole-server-1.1.0.tar.gz -P /tmp/
 tar xzf /tmp/guacamole-server-1.1.0.tar.gz -C /tmp/
+echo "$(date) [INFO] download complete" >> $LOG
 
-(
-    cd /tmp/guacamole-server-1.1.0 
-    sudo ./configure --with-init-dir=/etc/init.d
-    sudo make
-    sudo make install
-    sudo ldconfig
-)
+echo "$(date) [INFO] unpackaging and installing guacamole" >> $LOG
 
+cd /tmp/guacamole-server-1.1.0 
+sudo ./configure --with-init-dir=/etc/init.d
+sudo make
+sudo make install
+sudo ldconfig
+
+# (
+#     cd /tmp/guacamole-server-1.1.0 
+#     sudo ./configure --with-init-dir=/etc/init.d
+#     sudo make
+#     sudo make install
+#     sudo ldconfig
+# )
+
+echo "$(date) [INFO] guacamole install completed" >> $LOG
 sudo systemctl start guacd
 sudo systemctl enable guacd 
-
-
+echo "$(date) [INFO] started and enabled guacamole" >> $LOG
 ####
 sudo mkdir /etc/guacamole
 
@@ -48,7 +64,9 @@ echo "<user-mapping>
 </authorize>
 </user-mapping>" | sudo tee -a /etc/guacamole/user-mapping.xml
 
+echo "$(date) [INFO] created user-mapping file for guacamole" >> $LOG
 
+echo "$(date) [INFO] downloading guacamole app" >> $LOG
 sudo wget https://downloads.apache.org/guacamole/1.1.0/binary/guacamole-1.1.0.war -O /etc/guacamole/guacamole.war 
 sudo ln -s /etc/guacamole/guacamole.war /var/lib/tomcat9/webapps/ 
 sleep 10 
