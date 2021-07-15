@@ -15,27 +15,27 @@ echo "$(date) [INFO] Running apt-get" >> $LOG
 #sudo apt-get install xrdp lxde make gcc g++ libcairo2-dev libjpeg-turbo8-dev libpng-dev libtool-bin libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libvncserver-dev libtelnet-dev libssl-dev libvorbis-dev libwebp-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user nginx -y
 sudo apt update
 
-sudo apt install -y xrdp lxde nginx
-sudo apt update
-echo "$(date) [INFO] Installed XRDP LXDE NGINX" >> $LOG
-echo "$(date) [INFO] Moving on" >> $LOG
-sudo apt install -y gcc g++ build-essential make libcairo2-dev libjpeg-turbo8-dev libpng-dev \
-libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev \
-libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev \
-libwebp-dev libtelnet-dev libjpeg-dev libavformat-dev libwebsockets-dev \
-libpulse-dev libtool-bin 
-
-sudo apt update
-echo "$(date) [INFO] Installing tomcat" >> $LOG
-sudo apt install -y tomcat9 tomcat9-admin tomcat9-common tomcat9-user
-
+# sudo apt install -y xrdp lxde nginx
+# sudo apt update
+# echo "$(date) [INFO] Installed XRDP LXDE NGINX" >> $LOG
+# echo "$(date) [INFO] Moving on" >> $LOG
 # sudo apt install -y gcc g++ build-essential make libcairo2-dev libjpeg-turbo8-dev libpng-dev \
 # libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev \
 # libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev \
-# libwebp-dev libpng-dev libjpeg-dev libcairo2-dev libossp-uuid-dev tomcat9 \
-# tomcat9-admin tomcat9-common tomcat9-user libpango1.0-dev libavcodec-dev \
-# libavformat-dev libavutil-dev libswscale-dev libtelnet-dev libwebsockets-dev \
-# libpulse-dev libtool-bin nginx
+# libwebp-dev libtelnet-dev libjpeg-dev libavformat-dev libwebsockets-dev \
+# libpulse-dev libtool-bin 
+
+# sudo apt update
+# echo "$(date) [INFO] Installing tomcat" >> $LOG
+# sudo apt install -y tomcat9 tomcat9-admin tomcat9-common tomcat9-user
+
+sudo apt install -y xrdp lxde gcc g++ build-essential make libcairo2-dev libjpeg-turbo8-dev libpng-dev \
+libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev \
+libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev \
+libwebp-dev libpng-dev libjpeg-dev libcairo2-dev libossp-uuid-dev tomcat9 \
+tomcat9-admin tomcat9-common tomcat9-user libpango1.0-dev libavcodec-dev \
+libavformat-dev libavutil-dev libswscale-dev libtelnet-dev libwebsockets-dev \
+libpulse-dev libtool-bin nginx
 
 echo "$(date) [INFO] apt-get finished" >> $LOG
 
