@@ -11,8 +11,17 @@ sudo apt-get remove apache2 -y
 
 echo "$(date) [INFO] Running apt-get" >> $LOG
 # Install all the needed packages
-sudo apt-get update
-sudo apt-get install xrdp lxde make gcc g++ libcairo2-dev libjpeg-turbo8-dev libpng-dev libtool-bin libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libvncserver-dev libtelnet-dev libssl-dev libvorbis-dev libwebp-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user nginx -y
+#sudo apt-get update
+#sudo apt-get install xrdp lxde make gcc g++ libcairo2-dev libjpeg-turbo8-dev libpng-dev libtool-bin libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev libpango1.0-dev libssh2-1-dev libvncserver-dev libtelnet-dev libssl-dev libvorbis-dev libwebp-dev tomcat9 tomcat9-admin tomcat9-common tomcat9-user nginx -y
+sudo apt update
+sudo apt install -y gcc g++ build-essential make libcairo2-dev libjpeg-turbo8-dev libpng-dev \
+libossp-uuid-dev libavcodec-dev libavutil-dev libswscale-dev freerdp2-dev \
+libpango1.0-dev libssh2-1-dev libvncserver-dev libssl-dev libvorbis-dev \
+libwebp-dev libpng-dev libjpeg-dev libcairo2-dev libossp-uuid-dev tomcat9 \
+tomcat9-admin tomcat9-common tomcat9-user libpango1.0-dev libavcodec-dev \
+libavformat-dev libavutil-dev libswscale-dev libtelnet-dev libwebsockets-dev \
+libpulse-dev libtool-bin nginx
+
 echo "$(date) [INFO] apt-get finished" >> $LOG
 
 # Start and enable Tomcat
