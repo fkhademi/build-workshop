@@ -174,6 +174,9 @@ def process():
         add_pod(id, offset, max_pods, code)
     except:
         return '''<html>
+        <head>
+            <title>BUILD Pod Registration</title>
+        </head>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
         <center>
@@ -185,6 +188,9 @@ def process():
         <div class="alert alert-danger" role="alert">Unable to update DB!</div>'''
     else:
         return '''<html>
+        <head>
+            <title>BUILD Pod Registration</title>
+        </head>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
         <center>
@@ -212,7 +218,7 @@ def server_static(filepath):
 def process():
     # Get the form vars
     #max_num_pods = 46
-    domain = "avxlab.cc"
+    domain = "aviatrixlab.com"
     name = request.forms.get('name')
     email = request.forms.get('email')
     company = request.forms.get('company')
@@ -242,6 +248,9 @@ def process():
             # print a page to display pod info
             first_name = name.split(' ')
             return '''<html>
+            <head>
+                <title>BUILD Pod Registration</title>
+            </head>
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
             <center>
@@ -259,7 +268,7 @@ def process():
                     <h5 class="card-title">Remote Access Server</h5>
                     <p class="card-text">u: admin</p>
                     <p class="card-text">p: Password123!</p>
-                    <a target="_blank" rel="noopener noreferrer" href="https://client.pod%s.%s" class="btn btn-primary">Open Server</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://client-pod%s.%s" class="btn btn-primary">Open Server</a>
                 </div>
                 </div>
             </div>
