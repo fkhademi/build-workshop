@@ -43,7 +43,7 @@ resource "aws_route53_record" "app" {
 # AWS Client
 resource "aws_security_group" "db" {
   name   = "db-sg"
-  vpc_id = module.spoke_aws_1.vpc.vpc_id
+  vpc_id = aviatrix_vpc.spoke_aws_1.vpc_id
 
   ingress {
     from_port   = 0
@@ -80,7 +80,7 @@ resource "aws_instance" "db" {
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t3.small"
   key_name        = aws_key_pair.key.key_name
-  subnet_id       = module.spoke_aws_1.vpc.subnets[0].subnet_id
+  subnet_id       = aviatrix_vpc.spoke_aws_1.private_subnets[0].subnet_id
   security_groups = [aws_security_group.db.id]
   user_data       = "" #data.template_file.db.rendered
   tags = {

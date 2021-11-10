@@ -181,47 +181,12 @@ resource "aviatrix_firenet" "firenet" {
 
 
 #AWS SPOKE
-module "spoke_aws_1" {
-  source  = "terraform-aviatrix-modules/aws-spoke/aviatrix"
-  version = "4.0.3"
-
-  name           = "aws-db-node"
-  cidr           = "10.${var.pod_id}.64.0/20"
-  region         = var.aws_region
-  account        = aviatrix_account.aws.account_name
-  instance_size  = "t3.micro"
-  transit_gw     = ""
-  ha_gw          = false
-  prefix         = false
-  suffix         = false
-  attached       = false
-  #single_ip_snat = true
+resource "aviatrix_vpc" "spoke_aws_1" {
+  cloud_type           = 1
+  account_name         = aviatrix_account.aws.account_name
+  region               = var.aws_region
+  name                 = "aws-db-node"
+  cidr                 = "10.${var.pod_id}.64.0/20"
+  aviatrix_transit_vpc = false
+  aviatrix_firenet_vpc = false
 }
-
-# EGRESS POLICY
-/* resource "aviatrix_fqdn" "egress" {
-  fqdn_tag     = "Default-Egress-Policy"
-  fqdn_enabled = true
-  fqdn_mode    = "white"
-
-  gw_filter_tag_list {
-    gw_name = module.spoke_aws_1.spoke_gateway.gw_name
-  }
-}
-
-resource "aviatrix_fqdn_tag_rule" "ubuntu" {
-  fqdn_tag_name = aviatrix_fqdn.egress.fqdn_tag
-  fqdn          = "*.ubuntu.com"
-  protocol      = "tcp"
-  port          = "80"
-  action        = "Allow"
-}
-
-resource "aviatrix_fqdn_tag_rule" "github" {
-  fqdn_tag_name = aviatrix_fqdn.egress.fqdn_tag
-  fqdn          = "github.com"
-  protocol      = "tcp"
-  port          = "443"
-  action        = "Allow"
-}
- */
