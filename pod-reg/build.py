@@ -13,7 +13,7 @@ from boto3.dynamodb.conditions import Key, Attr
 def get_next_pod_id(id, name, email, company, start_time, code, dynamodb=None):
     # Get the next Pod ID of a Build class.  Max pods are 50
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=True)
     # Query table for Build ID
     table = dynamodb.Table('pod_counter')
     response = table.get_item(
@@ -45,7 +45,7 @@ def get_next_pod_id(id, name, email, company, start_time, code, dynamodb=None):
 def get_code(id, dynamodb=None):
     # Get the access code for Build ID
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=True)
     # Query table for Build ID
     table = dynamodb.Table('pod_counter')
     response = table.get_item(
@@ -66,7 +66,7 @@ def get_code(id, dynamodb=None):
 def get_max_pods(id, dynamodb=None):
     # Get the access code for Build ID
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=True)
     # Query table for Build ID
     table = dynamodb.Table('pod_counter')
     response = table.get_item(
@@ -87,7 +87,7 @@ def get_max_pods(id, dynamodb=None):
 def add_pod(id, pod_num, max_pods, code, dynamodb=None):
     # Insert a new record in DynamoDB
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=True)
 
     table = dynamodb.Table('pod_counter')
     response = table.put_item(
@@ -102,7 +102,7 @@ def add_pod(id, pod_num, max_pods, code, dynamodb=None):
 def add_user(id, user_id, name, email, company, start_time, dynamodb=None):
     # Insert a new record in DynamoDB
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=False)
+        dynamodb = boto3.resource('dynamodb', region_name='eu-central-1', verify=True)
 
     table = dynamodb.Table('pod_history')
     response = table.put_item(
