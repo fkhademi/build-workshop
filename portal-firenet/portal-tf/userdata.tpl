@@ -18,7 +18,7 @@ echo "aws_access_key_id=${access_key}" >> $HOME/.aws/credentials
 echo "aws_secret_access_key=${secret_key}" >> $HOME/.aws/credentials
 
 # Download build packages
-wget https://raw.githubusercontent.com/fkhademi/build-workshop/main/pod-reg/build.py -P $HOME/
+wget https://raw.githubusercontent.com/fkhademi/build-workshop/main/portal-firenet/pod-reg/build.py -P $HOME/
 wget https://raw.githubusercontent.com/fkhademi/build-workshop/main/pod-reg/list.tpl -P $HOME/
 wget https://raw.githubusercontent.com/fkhademi/build-workshop/main/pod-reg/public/index.html -P $HOME/public/
 wget https://raw.githubusercontent.com/fkhademi/build-workshop/main/pod-reg/public/logo.png -P $HOME/public/
