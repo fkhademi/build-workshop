@@ -22,14 +22,15 @@ module "transit_azure" {
   source  = "terraform-aviatrix-modules/azure-transit/aviatrix"
   version = "4.0.1"
 
-  name          = "azure-transit"
-  cidr          = "10.${var.pod_id}.0.0/20"
-  region        = var.azure_region
-  account       = aviatrix_account.azure.account_name
-  instance_size = "Standard_B2s"
-  ha_gw         = false
-  prefix        = false
-  suffix        = false
+  name                  = "azure-transit"
+  cidr                  = "10.${var.pod_id}.0.0/20"
+  region                = var.azure_region
+  account               = aviatrix_account.azure.account_name
+  instance_size         = "Standard_B2s"
+  ha_gw                 = false
+  prefix                = false
+  suffix                = false
+  learned_cidr_approval = true
 }
 
 # FQDN for AVX Transit GW in Azure
