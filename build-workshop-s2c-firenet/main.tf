@@ -159,7 +159,7 @@ resource "aws_network_interface" "lan" {
 }
 
 # Associate FW with Firenet
-resource "aviatrix_firewall_instance_association" "fw" {
+/* resource "aviatrix_firewall_instance_association" "fw" {
   vpc_id               = module.firenet.vpc.vpc_id
   firenet_gw_name      = module.firenet.transit_gateway.gw_name
   instance_id          = module.fw.vm.id
@@ -178,7 +178,7 @@ resource "aviatrix_firenet" "firenet" {
   keep_alive_via_lan_interface_enabled = true
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.fw]
-}
+} */
 
 
 #AWS SPOKE
