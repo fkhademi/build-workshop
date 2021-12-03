@@ -156,6 +156,9 @@ resource "aws_network_interface" "lan" {
     instance     = module.fw.vm.id
     device_index = 1
   }
+  tags = {
+    Name = "fw-LAN-eni"
+  }
 }
 
 # Associate FW with Firenet
