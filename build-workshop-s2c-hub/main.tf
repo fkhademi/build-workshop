@@ -13,7 +13,7 @@ module "build_hub" {
   prefix                           = false
   suffix                           = false
   enable_advertise_transit_cidr    = true
-  bgp_manual_spoke_advertise_cidrs = "0.0.0.0/0,172.16.0.0/12,192.168.0.0/16,10.230.0.0/16,10.240.0.0/24"
+  bgp_manual_spoke_advertise_cidrs = "172.16.0.0/12,192.168.0.0/16,10.230.0.0/16,10.240.0.0/24"
 }
 
 resource "aws_route53_record" "onprem-gw" {
